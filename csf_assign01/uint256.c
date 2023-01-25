@@ -9,6 +9,9 @@
 // all other bits are set to 0.
 UInt256 uint256_create_from_u64(uint64_t val) {
   UInt256 result;
+  result.data[0] = val;
+
+
   // TODO: implement
   return result;
 }
