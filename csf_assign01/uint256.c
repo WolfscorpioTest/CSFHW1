@@ -10,7 +10,7 @@
 UInt256 uint256_create_from_u64(uint64_t val) {
   UInt256 result;
   result.data[0] = val;
-
+  
 
   // TODO: implement
   return result;
@@ -21,6 +21,9 @@ UInt256 uint256_create_from_u64(uint64_t val) {
 // at index 3 is the most significant.
 UInt256 uint256_create(const uint64_t data[4]) {
   UInt256 result;
+  for(int i = 0 ; i < sizeof(data) / sizeof(data[0]) ; i++) {
+    result.data[i] = data[i];
+  }
   // TODO: implement
   return result;
 }
