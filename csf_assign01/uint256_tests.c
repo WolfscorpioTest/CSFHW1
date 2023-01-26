@@ -7,6 +7,7 @@
 typedef struct {
   UInt256 zero;
   UInt256 one;
+  UInt256 rand;
   UInt256 large1;
 
   const char *hex1;
@@ -75,6 +76,11 @@ TestObjs *setup(void) {
   objs->one.data[1] = 0U;
   objs->one.data[0] = 1U;
 
+  objs->rand.data[3] = 0U;
+  objs->rand.data[2] = 0U;
+  objs->rand.data[1] = 0U;
+  objs->rand.data[0] = 0U;
+
   objs->large1.data[3] = 0xAA;
   objs->large1.data[2] = 0xBB;
   objs->large1.data[1] = 0xCC;
@@ -115,9 +121,10 @@ void test_get_bits(TestObjs *objs) {
 void test_create_from_u64(TestObjs *objs) {
   objs->zero = uint256_create_from_u64(0U);
   objs->one = uint256_create_from_u64(1U);
-
+  objs->rand = uint256_create_from_u64(5U);
   ASSERT(check(objs->zero, 0U, 0U, 0U, 0U));
   ASSERT(check(objs->one, 0U, 0U, 0U, 1U));
+  ASSERT(check(objs->rand, 0U, 0U, 0U, 5U));
 }
 
 void test_create(TestObjs *objs) {
@@ -125,16 +132,18 @@ void test_create(TestObjs *objs) {
   // be stored in order from least significant to most significant
   uint64_t zero_init[] =   {0U, 0U, 0U, 0U};
   uint64_t one_init[] =    {1U, 0U, 0U, 0U};
+  uint64_t rand_init[] =    {5U, 0U, 0U, 0U};
 
   objs->zero = uint256_create(zero_init);
   objs->one = uint256_create(one_init);
-
+  objs->rand = uint256_create(rand_init);
   // In the calls to check, the uint64_t values are specified
   // in the order most significant to least significant
   // (i.e., the reverse of the order in the array passed to
   // uint256_create)
   ASSERT(check(objs->zero, 0U, 0U, 0U, 0U));
   ASSERT(check(objs->one, 0U, 0U, 0U, 1U));
+  ASSERT(check(objs->rand, 0U, 0U, 0U, 5U));
 }
 
 void test_create_from_hex(TestObjs *objs) {
