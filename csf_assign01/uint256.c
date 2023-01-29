@@ -76,7 +76,10 @@ UInt256 uint256_add(UInt256 left, UInt256 right) {
 // Compute the difference of two UInt256 values.
 UInt256 uint256_sub(UInt256 left, UInt256 right) {
   UInt256 result;
-  // TODO: implement
+  for(int i = 0 ; i < 4 ; i++){
+    right.data[i] = ~(right.data[i])+1;
+  }
+  result = uint256_add(left,right);
   return result;
 }
 
