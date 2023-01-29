@@ -31,6 +31,7 @@ void test_format_as_hex(TestObjs *objs);
 void test_add_1(TestObjs *objs);
 void test_add_2(TestObjs *objs);
 void test_add_3(TestObjs *objs);
+void test_add_4(TestObjs *objs);
 void test_sub_1(TestObjs *objs);
 void test_sub_2(TestObjs *objs);
 void test_sub_3(TestObjs *objs);
@@ -50,8 +51,10 @@ int main(int argc, char **argv) {
   TEST(test_create_from_hex);
   TEST(test_format_as_hex);
   TEST(test_add_1);
+  TEST(test_add_4);
   TEST(test_add_2);
   TEST(test_add_3);
+  
   TEST(test_sub_1);
   TEST(test_sub_2);
   TEST(test_sub_3);
@@ -76,10 +79,10 @@ TestObjs *setup(void) {
   objs->one.data[1] = 0U;
   objs->one.data[0] = 1U;
 
-  objs->rand.data[3] = 0U;
-  objs->rand.data[2] = 0U;
-  objs->rand.data[1] = 0U;
-  objs->rand.data[0] = 0U;
+  objs->rand.data[3] = ~(0U);
+  objs->rand.data[2] = ~(0U);
+  objs->rand.data[1] = ~(0U);
+  objs->rand.data[0] = ~(0U);
 
   objs->large1.data[3] = 0xAA;
   objs->large1.data[2] = 0xBB;
@@ -222,9 +225,22 @@ void test_add_3(TestObjs *objs) {
   right.data[3] = 0x173ba2210b102e7UL;
   result = uint256_add(left, right);
   ASSERT(0xc3210dc7b69dd3fdUL == result.data[0]);
+  printf("%d", result.data[1]);
   ASSERT(0xd985258eaaa18478UL == result.data[1]);
+
   ASSERT(0xc7aa07a5c1cba880UL == result.data[2]);
   ASSERT(0xac5151273cfcf2eUL == result.data[3]);
+}
+
+void test_add_4(TestObjs *objs) {
+  UInt256 sum;
+  sum = uint256_add(objs->zero, objs->one);
+
+  ASSERT(0UL == sum.data[3]);
+  ASSERT(0UL == sum.data[2]);
+  ASSERT(0UL == sum.data[1]);
+  ASSERT(1UL == sum.data[0]);
+
 }
 
 void test_sub_1(TestObjs *objs) {
