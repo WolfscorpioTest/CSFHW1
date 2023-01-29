@@ -225,7 +225,7 @@ void test_add_3(TestObjs *objs) {
   right.data[3] = 0x173ba2210b102e7UL;
   result = uint256_add(left, right);
   ASSERT(0xc3210dc7b69dd3fdUL == result.data[0]);
-  printf("%d", result.data[1]);
+  //printf("%d", result.data[1]);
   ASSERT(0xd985258eaaa18478UL == result.data[1]);
 
   ASSERT(0xc7aa07a5c1cba880UL == result.data[2]);
