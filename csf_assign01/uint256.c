@@ -34,10 +34,11 @@ UInt256 uint256_create(const uint64_t data[4]) {
 UInt256 uint256_create_from_hex(const char *hex) {
   UInt256 result;
   size_t len = strlen(hex);
+  char *new = hex;
   char *ptr;
   if(len>64) {
-    strncpy(hex,hex+len-64,64);
-    len = strlen(hex);
+    strncpy(new,new+len-64,64);
+    len = strlen(new);
     printf("%d",len);
   }
   int totallen = len;
@@ -49,26 +50,17 @@ UInt256 uint256_create_from_hex(const char *hex) {
   int i = 0;
   while(len>16 && i < 4){
     char temp[16];
-    strncpy(temp,hex+len-totallen,count);
+    strncpy(temp,new+len-totallen,count);
     result.data[i] = strtoul(temp,&ptr,16);
     len = len - 16;
     i++;
   }
   if(len > 0) {
     char temp[len];
-    strncpy(temp,hex+len-totallen,count);
+    strncpy(temp,new+len-totallen,count);
     result.data[i] = strtoul(temp,&ptr,16);
   }
 
-  // for(int i = 0 ; i < 4 ; i++){
-  //   if(len<16){
-  //     count = len;
-  //   }
-  //   char temp[16];
-  //   strncpy(temp,hex+len-64,count);
-  //   result.data[i] = strtoul(temp,&ptr,16);
-  //   len = len - 16;
-  // }
   // TODO: implement
   return result;
 }
@@ -77,7 +69,17 @@ UInt256 uint256_create_from_hex(const char *hex) {
 // given UInt256 value.
 char *uint256_format_as_hex(UInt256 val) {
   char *hex = NULL;
+  char *buf;
+  buf = (char *) malloc(20);
+  //uint64_t val = /* some value */;
+
+  //sprintf(buf, "%lx", val);    // format without leading 0s
+  for(int i = 0 ; i < 4 ; i++) {
+    sprintf(buf, "%016lx", val.data[i]); // format with leading 0s
+    strcat(hex,buf);
+  }
   // TODO: implement
+  free(buf);
   return hex;
 }
 
