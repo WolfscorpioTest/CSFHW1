@@ -9,7 +9,7 @@ typedef struct {
   UInt256 one;
   UInt256 rand;
   UInt256 large1;
-
+  uint64_t val;
   const char *hex1;
   const char *hex2;
   const char *hex3;
@@ -28,15 +28,19 @@ void test_create_from_u64(TestObjs *objs);
 void test_create(TestObjs *objs);
 void test_create_from_hex(TestObjs *objs);
 void test_format_as_hex(TestObjs *objs);
+//void test_formatuint64t(TestObjs *objs);
 void test_add_1(TestObjs *objs);
 void test_add_2(TestObjs *objs);
 void test_add_3(TestObjs *objs);
 void test_add_4(TestObjs *objs);
+
 void test_sub_1(TestObjs *objs);
 void test_sub_2(TestObjs *objs);
 void test_sub_3(TestObjs *objs);
+void test_sub_4(TestObjs *objs);
 void test_mul_1(TestObjs *objs);
 void test_mul_2(TestObjs *objs);
+void test_bitset_1(TestObjs *objs);
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -54,12 +58,15 @@ int main(int argc, char **argv) {
   TEST(test_add_4);
   TEST(test_add_2);
   TEST(test_add_3);
+  //TEST(test_formatuint64t);
   
   TEST(test_sub_1);
   TEST(test_sub_2);
   TEST(test_sub_3);
+  TEST(test_sub_4);
   TEST(test_mul_1);
   TEST(test_mul_2);
+  TEST(test_bitset_1);
 
   TEST_FINI();
 }
@@ -89,6 +96,7 @@ TestObjs *setup(void) {
   objs->large1.data[1] = 0xCC;
   objs->large1.data[0] = 0xDD;
 
+  objs->val = 0x20A6C2C;
   // example hex strings
 
   objs->hex1 = "0";
@@ -157,7 +165,32 @@ void test_create_from_hex(TestObjs *objs) {
 
   val = uint256_create_from_hex(objs->hex2);
   ASSERT(check(val, 0x0UL, 0x0UL, 0x0UL, 0xcafeUL));
+
+  val = uint256_create_from_hex(objs->hex3);
+  // printf("\nHello, World\n\n");
+  // printf("%x",val.data[0]);
+  // printf("hi\n");
+  // printf("%x",val.data[1]);
+  // printf("hi\n");
+  // printf("%x",val.data[2]);
+  // printf("hi\n");
+  // printf("%x",val.data[3]);
+  // printf("hi\n");
+  //ASSERT(0x4a4b72ebb654226eUL == val.data[0]);
+  //ASSERT(0x781b28d25fb00b0UL == val.data[3]);
+  //objs->hex3 = "4a4b72ebb654226ef77ed83d884f4940e4243bc3913ceaf5781b28d25fb00b0";
+  ASSERT(check(val,0x4a4b72ebb654226UL,0xef77ed83d884f494UL,0x0e4243bc3913ceafUL,0x5781b28d25fb00b0UL));
+  
+ 
 }
+
+// void test_formatuint64t(TestObjs *objs){
+//   char *s;
+//   s = uint64_tashex(objs->val);
+//   ASSERT(0 == strcmp("20A6C2C",s));
+//   free(s);
+  
+// }
 
 void test_format_as_hex(TestObjs *objs) {
   char *s;
@@ -225,7 +258,7 @@ void test_add_3(TestObjs *objs) {
   right.data[3] = 0x173ba2210b102e7UL;
   result = uint256_add(left, right);
   ASSERT(0xc3210dc7b69dd3fdUL == result.data[0]);
-  //printf("%d", result.data[1]);
+  //printf("%d", result.data[0]);
   ASSERT(0xd985258eaaa18478UL == result.data[1]);
 
   ASSERT(0xc7aa07a5c1cba880UL == result.data[2]);
@@ -242,6 +275,8 @@ void test_add_4(TestObjs *objs) {
   ASSERT(1UL == sum.data[0]);
 
 }
+
+
 
 void test_sub_1(TestObjs *objs) {
   // basic subtraction tests
@@ -273,6 +308,8 @@ void test_sub_2(TestObjs *objs) {
   right.data[3] = 0x0UL;
   result = uint256_sub(left, right);
   ASSERT(0x8f17c46404746406UL == result.data[0]);
+  //printf("%ld", result.data[1]);
+
   ASSERT(0x4b05b325b88987cUL == result.data[1]);
   ASSERT(0x0UL == result.data[2]);
   ASSERT(0x0UL == result.data[3]);
@@ -299,6 +336,24 @@ void test_sub_3(TestObjs *objs) {
   ASSERT(0x0e4243bc3913ceafUL == result.data[1]);
   ASSERT(0xef77ed83d884f494UL == result.data[2]);
   ASSERT(0x4a4b72ebb654226UL == result.data[3]);
+}
+
+void test_sub_4(TestObjs *objs) {
+  UInt256 left, right, result;
+
+left.data[0] = 0xeee7d8c9a5f9e82cUL;
+left.data[1] = 0x39a280bf0772e5f0UL;
+left.data[2] = 0xf406fd64866ad2fbUL;
+left.data[3] = 0xc0b02ba840f40caUL;
+right.data[0] = 0x6e548f7b625a4748UL;
+right.data[1] = 0x1e9f16ff7730cfd4UL;
+right.data[2] = 0xcda8f5ed97995636UL;
+right.data[3] = 0x3f69093a9cdceceUL;
+result = uint256_sub(left, right);
+ASSERT(0x8093494e439fa0e4UL == result.data[0]);
+ASSERT(0x1b0369bf9042161cUL == result.data[1]);
+ASSERT(0x265e0776eed17cc5UL == result.data[2]);
+ASSERT(0x8147226da4171fcUL == result.data[3]);
 }
 
 void test_mul_1(TestObjs *objs) {
@@ -333,3 +388,17 @@ void test_mul_2(TestObjs *objs) {
   ASSERT(0x61abad710163aa9bUL == result.data[2]);
   ASSERT(0x991f2125eacd3UL == result.data[3]);
 }
+ void test_bitset_1(TestObjs *objs) {
+  int x = uint256_bit_is_set(objs -> zero,0);
+  ASSERT(0 == x);
+  x = uint256_bit_is_set(objs -> one,0);
+  ASSERT(1 == x);
+  x = uint256_bit_is_set(objs -> one,65);
+  ASSERT(1 == x);
+  x = uint256_bit_is_set(objs -> one,129);
+  ASSERT(1 == x);
+  x = uint256_bit_is_set(objs -> one,193);
+  ASSERT(1 == x);
+
+  
+ }
