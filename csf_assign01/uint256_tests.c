@@ -389,16 +389,32 @@ void test_mul_2(TestObjs *objs) {
   ASSERT(0x991f2125eacd3UL == result.data[3]);
 }
  void test_bitset_1(TestObjs *objs) {
+  UInt256 allones, val;
+  allones.data[0] = 1UL;
+  allones.data[1] = 1UL;
+  allones.data[2] = 1UL;
+  allones.data[3] = 1UL;
+  val.data[0] = 3UL;
+  val.data[1] = 5UL;
+  val.data[2] = 1UL;
+  val.data[3] = 1UL;
+
   int x = uint256_bit_is_set(objs -> zero,0);
   ASSERT(0 == x);
-  x = uint256_bit_is_set(objs -> one,0);
+  x = uint256_bit_is_set(allones,0);
   ASSERT(1 == x);
-  x = uint256_bit_is_set(objs -> one,65);
+  x = uint256_bit_is_set(allones,64);
   ASSERT(1 == x);
-  x = uint256_bit_is_set(objs -> one,129);
+  x = uint256_bit_is_set(allones,128);
   ASSERT(1 == x);
-  x = uint256_bit_is_set(objs -> one,193);
+  x = uint256_bit_is_set(allones,192);
   ASSERT(1 == x);
-
-  
+  x = uint256_bit_is_set(val,1);
+  ASSERT(1 == x);
+  x = uint256_bit_is_set(val,0);
+  ASSERT(1 == x);
+  x = uint256_bit_is_set(val,65);
+  ASSERT(0 == x);
+  x = uint256_bit_is_set(val,66);
+  ASSERT(1 == x);
  }
